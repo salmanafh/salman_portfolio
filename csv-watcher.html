@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSV Watcher — Salman's Portfolio</title>
+  <meta name="description" content="CSV Watcher — automated SmartCare data loader replacing SSIS for SOC Internal Dashboard.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚒️</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+  <style>
+    :root {
+      --bg: #0a0a0f; --bg2: #111118; --bg3: #1a1a24;
+      --surface: #1e1e2a; --border: rgba(255,255,255,0.08);
+      --accent: #00e5ff; --text: #f0f0f8; --muted: #8888aa;
+      --tag-bg: rgba(0,229,255,0.08); --tag-color: #00e5ff;
+    }
+    .light {
+      --bg: #f4f4f8; --bg2: #ebebf2; --bg3: #e0e0ea;
+      --surface: #ffffff; --border: rgba(0,0,0,0.08);
+      --accent: #0070d4; --text: #0d0d1a; --muted: #5a5a7a;
+      --tag-bg: rgba(0,112,212,0.08); --tag-color: #0070d4;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); transition: background 0.3s, color 0.3s; }
+
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--bg); border-bottom: 1px solid var(--border);
+      padding: 0 2rem; display: flex; align-items: center;
+      justify-content: space-between; height: 56px;
+    }
+    .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 18px; color: var(--accent); text-decoration: none; letter-spacing: -0.5px; }
+    .nav-right { display: flex; align-items: center; gap: 1.5rem; }
+    .nav-back { font-size: 13px; color: var(--muted); text-decoration: none; display: flex; align-items: center; gap: 6px; transition: color 0.2s; }
+    .nav-back:hover { color: var(--accent); }
+    .theme-btn { width: 36px; height: 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; cursor: pointer; position: relative; transition: background 0.3s; }
+    .theme-btn::after { content: ''; width: 14px; height: 14px; border-radius: 50%; background: var(--accent); position: absolute; top: 2px; left: 2px; transition: transform 0.3s; }
+    .light .theme-btn::after { transform: translateX(16px); }
+
+    .container { max-width: 900px; margin: 0 auto; padding: 0 2rem; }
+
+    /* HERO */
+    .project-hero { padding: 4rem 2rem 3rem; max-width: 900px; margin: 0 auto; }
+    .status-badge { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.08em; padding: 3px 12px; border-radius: 20px; display: inline-flex; align-items: center; gap: 5px; margin-bottom: 1.5rem; background: rgba(0,200,100,0.12); color: #00c864; border: 1px solid rgba(0,200,100,0.25); }
+    .status-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+    .project-hero h1 { font-family: 'Syne', sans-serif; font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1; margin-bottom: 1rem; }
+    .project-hero .subtitle { font-size: 16px; color: var(--muted); max-width: 620px; line-height: 1.7; margin-bottom: 2rem; }
+    .tech-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 2.5rem; }
+    .tag { font-family: 'DM Mono', monospace; font-size: 11px; padding: 5px 12px; border-radius: 4px; background: var(--tag-bg); color: var(--tag-color); border: 1px solid var(--tag-color); opacity: 0.8; }
+
+    /* PROBLEM BANNER */
+    .problem-banner {
+      background: rgba(220,50,50,0.07);
+      border: 1px solid rgba(220,50,50,0.2);
+      border-left: 3px solid #e24b4a;
+      border-radius: 8px; padding: 1.25rem 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .problem-banner .label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #e24b4a; margin-bottom: 0.5rem; }
+    .problem-banner p { font-size: 14px; color: var(--muted); line-height: 1.65; }
+    .problem-banner p span { color: var(--text); }
+
+    .solution-banner {
+      background: rgba(0,200,100,0.05);
+      border: 1px solid rgba(0,200,100,0.2);
+      border-left: 3px solid #00c864;
+      border-radius: 8px; padding: 1.25rem 1.5rem;
+      margin-bottom: 3rem;
+    }
+    .solution-banner .label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #00c864; margin-bottom: 0.5rem; }
+    .solution-banner p { font-size: 14px; color: var(--muted); line-height: 1.65; }
+    .solution-banner p span { color: var(--text); }
+
+    /* SECTION */
+    .section { padding: 3rem 0; border-top: 1px solid var(--border); }
+    .section-label { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--accent); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 0.5rem; }
+    .section-title { font-family: 'Syne', sans-serif; font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 1.5rem; }
+
+    /* SCREENSHOTS */
+    .screenshot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1rem; }
+    .screenshot-item { border-radius: 8px; overflow: hidden; border: 1px solid var(--border); background: var(--surface); }
+    .screenshot-item img { width: 100%; display: block; transition: transform 0.3s; }
+    .screenshot-item:hover img { transform: scale(1.02); }
+    .screenshot-caption { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); padding: 8px 12px; border-top: 1px solid var(--border); }
+    .screenshot-full { border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
+    .screenshot-full img { width: 100%; display: block; }
+    .screenshot-full .screenshot-caption { border-top: 1px solid var(--border); }
+
+    /* FEATURES */
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; }
+    .feature-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem; }
+    .feature-icon { font-size: 20px; color: var(--accent); margin-bottom: 0.75rem; }
+    .feature-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; margin-bottom: 0.4rem; }
+    .feature-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+    /* FLOW */
+    .flow { display: flex; flex-direction: column; gap: 0; }
+    .flow-step { display: flex; gap: 1.25rem; align-items: flex-start; padding: 1.25rem 0; border-bottom: 1px solid var(--border); }
+    .flow-step:last-child { border-bottom: none; }
+    .flow-num { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--accent); background: var(--tag-bg); border: 1px solid var(--tag-color); border-radius: 4px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .flow-content h4 { font-weight: 500; font-size: 15px; margin-bottom: 4px; }
+    .flow-content p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+    /* IMPACT */
+    .impact-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .impact-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem; text-align: center; }
+    .impact-num { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 2.2rem; color: var(--accent); line-height: 1; margin-bottom: 6px; }
+    .impact-label { font-size: 12px; color: var(--muted); line-height: 1.4; }
+
+    /* BACK BTN */
+    .back-section { padding: 3rem 0 4rem; border-top: 1px solid var(--border); display: flex; gap: 12px; }
+    .btn-ghost { padding: 12px 28px; background: transparent; color: var(--text); border: 1px solid var(--border); border-radius: 6px; font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 14px; cursor: pointer; text-decoration: none; transition: border-color 0.2s, transform 0.15s; display: inline-flex; align-items: center; gap: 8px; }
+    .btn-ghost:hover { border-color: var(--accent); transform: translateY(-1px); }
+
+    .lightbox {
+  display: none; position: fixed; inset: 0; z-index: 999;
+  background: rgba(0,0,0,0.85); backdrop-filter: blur(6px);
+  align-items: center; justify-content: center; padding: 1.5rem;
+  }
+  .lightbox.active { display: flex; }
+  .lightbox img {
+    max-width: 100%; max-height: 90vh;
+    border-radius: 8px; border: 1px solid var(--border);
+    object-fit: contain;
+    cursor: zoom-in;
+    transform-origin: center center;
+    transition: transform 0.2s;
+    user-select: none;
+  }
+  .lightbox img.zoomed { cursor: zoom-out; }
+  .lightbox-close {
+    position: fixed; top: 1rem; right: 1rem;
+    background: var(--surface); border: 1px solid var(--border);
+    color: var(--text); border-radius: 50%;
+    width: 36px; height: 36px; font-size: 18px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+  }
+  .screenshot-item img { cursor: zoom-in; }
+
+    @media (max-width: 600px) {
+      .screenshot-grid { grid-template-columns: 1fr; }
+      .impact-grid { grid-template-columns: 1fr; }
+      .features-grid { grid-template-columns: 1fr; }
+    }
+
+    .animate-in { animation: fadeUp 0.5s ease forwards; opacity: 0; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">S.Portfolio</a>
+  <div class="nav-right">
+    <a href="index.html" class="nav-back"><i class="ti ti-arrow-left"></i> Back to projects</a>
+    <button class="theme-btn" onclick="document.body.classList.toggle('light')" aria-label="Toggle theme"></button>
+  </div>
+</nav>
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()"><i class="ti ti-x"></i></button>
+  <img id="lightbox-img" src="" alt="">
+</div>
+<div class="project-hero animate-in">
+  <div class="status-badge"><span class="status-dot"></span>Live — Internal Tool</div>
+  <h1>CSV Watcher</h1>
+  <p class="subtitle">An automated file import system that monitors network folders and loads SmartCare tool data directly into SQL Server — completely eliminating the problematic SSIS pipeline that caused chronic data delays and duplicates for SOC Internal Dasboard.</p>
+  <div class="tech-tags">
+    <span class="tag">Python</span>
+    <span class="tag">Flask</span>
+    <span class="tag">SQL Server</span>
+    <span class="tag">Windows Service</span>
+    <span class="tag">ETL</span>
+    <span class="tag">Huawei SmartCare</span>
+    <span class="tag">ODBC</span>
+  </div>
+
+  <div class="problem-banner">
+    <div class="label">// The Problem</div>
+    <p>SOC data pipeline relied on <span>SSIS (SQL Server Integration Services)</span> to load SmartCare tool exports into SQL Server. SSIS was notoriously fragile — it caused <span>frequent data delays</span>, silently produced <span>duplicate records</span>, and required constant manual intervention. The team had no visibility into what was happening or why imports were failing.</p>
+  </div>
+  <div class="solution-banner">
+    <div class="label">// The Solution</div>
+    <p>CSV Watcher replaces SSIS entirely with a <span>lightweight Python service</span> that watches designated network folders, detects new SmartCare CSV exports by filename keyword, and appends data to SQL Server transactionally. With a live dashboard, import heatmap, and job scheduler — the team now has <span>full visibility and zero data delays</span>.</p>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="section animate-in" style="animation-delay:0.1s">
+    <div class="section-label">// screenshots</div>
+    <div class="section-title">App Overview</div>
+    <div class="screenshot-grid">
+      <div class="screenshot-item">
+        <img src="ss-dashboard.jpeg" alt="CSV Watcher Dashboard">
+        <div class="screenshot-caption">Dashboard — service monitor & live log</div>
+      </div>
+      <div class="screenshot-item">
+        <img src="ss-watchers.jpeg" alt="CSV Watcher Watchers">
+        <div class="screenshot-caption">Watchers — folder-to-table import pairs</div>
+      </div>
+      <div class="screenshot-item">
+        <img src="ss-jobs.jpeg" alt="CSV Watcher Jobs">
+        <div class="screenshot-caption">Jobs — daily/hourly/minutely data checklist</div>
+      </div>
+      <div class="screenshot-item">
+        <img src="ss-create-table.jpeg" alt="CSV Watcher Create Table">
+        <div class="screenshot-caption">Create Table — from CSV upload or manual input</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section animate-in" style="animation-delay:0.15s">
+    <div class="section-label">// how it works</div>
+    <div class="section-title">Data Flow</div>
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-num">01</div>
+        <div class="flow-content">
+          <h4>SmartCare exports CSV</h4>
+          <p>Huawei SmartCare automatically generates CSV files containing network KPI data and drops them into designated FTP/network folders on the server.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">02</div>
+        <div class="flow-content">
+          <h4>Windows Service detects new file</h4>
+          <p>The CSV Watcher Windows Service polls configured watch folders every few seconds. When a new file appears matching the keyword pattern, it triggers the import process.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">03</div>
+        <div class="flow-content">
+          <h4>Data appended to SQL Server</h4>
+          <p>The file is read, cleaned (NUL characters removed), and appended transactionally to the target SQL Server table using ODBC. Row counts are logged at every step.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">04</div>
+        <div class="flow-content">
+          <h4>File archived or rejected</h4>
+          <p>Successfully imported files move to the Archive folder. Files that don't match any watcher keyword are moved to Rejected — nothing is silently dropped.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">05</div>
+        <div class="flow-content">
+          <h4>Dashboard & Jobs confirm success</h4>
+          <p>The live log updates in real time. The Jobs page shows a green/red heatmap per watcher — daily, hourly, or minutely — so the team can instantly see if any data source missed its window.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section animate-in" style="animation-delay:0.2s">
+    <div class="section-label">// features</div>
+    <div class="section-title">Key Features</div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon"><i class="ti ti-eye"></i></div>
+        <div class="feature-title">Live Log Dashboard</div>
+        <div class="feature-desc">Real-time log viewer auto-refreshing every 5 seconds. Shows every file event, import progress, row counts, and errors as they happen.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="ti ti-folder-open"></i></div>
+        <div class="feature-title">Watcher Management</div>
+        <div class="feature-desc">Add, edit, enable, or disable folder-to-table mappings from the UI. Each watcher defines a watch folder, keyword filter, target server, database, and table.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="ti ti-chart-grid-dots"></i></div>
+        <div class="feature-title">Import Heatmap</div>
+        <div class="feature-desc">Jobs page shows a color-coded heatmap of import success per watcher — green for OK, red for missing. Granularity: daily, hourly, or minutely.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="ti ti-table-plus"></i></div>
+        <div class="feature-title">In-App Table Creator</div>
+        <div class="feature-desc">Upload a CSV to auto-detect column names and data types, or define columns manually. Generates and executes the CREATE TABLE SQL directly on the target server.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="ti ti-server"></i></div>
+        <div class="feature-title">Multi-Server Support</div>
+        <div class="feature-desc">Connect multiple SQL Server profiles with connection testing built in. Each watcher can target a different server independently.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="ti ti-shield-check"></i></div>
+        <div class="feature-title">Zero Duplicates</div>
+        <div class="feature-desc">Each file is processed once and immediately archived. No retry loops, no double-processing — the exact problem that plagued the old SSIS setup.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section animate-in" style="animation-delay:0.25s">
+    <div class="section-label">// impact</div>
+    <div class="section-title">Results</div>
+    <div class="impact-grid">
+      <div class="impact-card">
+        <div class="impact-num">0</div>
+        <div class="impact-label">Data delays since deployment</div>
+      </div>
+      <div class="impact-card">
+        <div class="impact-num">17</div>
+        <div class="impact-label">Active watchers running in production</div>
+      </div>
+      <div class="impact-card">
+        <div class="impact-num">100%</div>
+        <div class="impact-label">SSIS dependency removed</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="back-section">
+    <a href="index.html" class="btn-ghost"><i class="ti ti-arrow-left"></i> Back to all projects</a>
+  </div>
+
+</div>
+
+<script>
+  const saved = localStorage.getItem('theme');
+  if (saved === 'light') document.body.classList.add('light');
+  document.querySelector('.theme-btn').addEventListener('click', () => {
+    document.body.classList.toggle('light');
+    localStorage.setItem('theme', document.body.classList.contains('light') ? 'light' : 'dark');
+  });
+
+  let scale = 1;
+  let isDragging = false;
+  let startX, startY, translateX = 0, translateY = 0;
+
+  document.querySelectorAll('.screenshot-item img').forEach(img => {
+    img.addEventListener('click', () => {
+      const lb = document.getElementById('lightbox');
+      const lbImg = document.getElementById('lightbox-img');
+      lbImg.src = img.src;
+      lb.classList.add('active');
+      resetZoom();
+    });
+  });
+
+  function resetZoom() {
+    scale = 1; translateX = 0; translateY = 0;
+    const lbImg = document.getElementById('lightbox-img');
+    lbImg.classList.remove('zoomed');
+    applyTransform();
+  }
+
+  function applyTransform() {
+    const lbImg = document.getElementById('lightbox-img');
+    lbImg.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+  }
+
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('active');
+    resetZoom();
+  }
+
+  // Click to zoom in/out
+  document.getElementById('lightbox-img').addEventListener('click', (e) => {
+    e.stopPropagation();
+    const lbImg = document.getElementById('lightbox-img');
+    const rect = lbImg.getBoundingClientRect();
+
+    if (scale === 1) {
+      // zoom ke posisi cursor
+      const offsetX = e.clientX - rect.left - rect.width / 2;
+      const offsetY = e.clientY - rect.top - rect.height / 2;
+      scale = 2.5;
+      translateX = -offsetX * (scale - 1);
+      translateY = -offsetY * (scale - 1);
+      lbImg.classList.add('zoomed');
+    } else {
+      scale = 1;
+      translateX = 0; translateY = 0;
+      lbImg.classList.remove('zoomed');
+    }
+    applyTransform();
+  });
+
+  // Drag to pan when zoomed
+  const lbImg = document.getElementById('lightbox-img');
+  lbImg.addEventListener('mousedown', (e) => {
+    if (scale === 1) return;
+    isDragging = true;
+    startX = e.clientX - translateX;
+    startY = e.clientY - translateY;
+    lbImg.style.transition = 'none';
+  });
+  document.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    translateX = e.clientX - startX;
+    translateY = e.clientY - startY;
+    applyTransform();
+  });
+  document.addEventListener('mouseup', () => {
+    isDragging = false;
+    lbImg.style.transition = 'transform 0.2s';
+  });
+
+  // Scroll to zoom
+  document.getElementById('lightbox').addEventListener('wheel', (e) => {
+    e.preventDefault();
+    const lbImg = document.getElementById('lightbox-img');
+    const rect = lbImg.getBoundingClientRect();
+    const offsetX = e.clientX - rect.left - rect.width / 2;
+    const offsetY = e.clientY - rect.top - rect.height / 2;
+
+    const prevScale = scale;
+    scale = Math.min(Math.max(1, scale - e.deltaY * 0.005), 4);
+    const delta = scale / prevScale;
+
+    translateX = translateX * delta - offsetX * (delta - 1);
+    translateY = translateY * delta - offsetY * (delta - 1);
+
+    if (scale === 1) { translateX = 0; translateY = 0; }
+    lbImg.classList.toggle('zoomed', scale > 1);
+    applyTransform();
+  }, { passive: false });
+
+  // Pinch to zoom (mobile)
+  let lastDist = 0;
+  document.getElementById('lightbox').addEventListener('touchmove', (e) => {
+    if (e.touches.length === 2) {
+      e.preventDefault();
+      const dx = e.touches[0].clientX - e.touches[1].clientX;
+      const dy = e.touches[0].clientY - e.touches[1].clientY;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if (lastDist) scale = Math.min(Math.max(1, scale * (dist / lastDist)), 4);
+      lastDist = dist;
+      applyTransform();
+    }
+  }, { passive: false });
+  document.getElementById('lightbox').addEventListener('touchend', () => { lastDist = 0; });
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+</script>
+</body>
+</html>

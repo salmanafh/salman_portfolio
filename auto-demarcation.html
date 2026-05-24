@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auto Demarcation — Salman's Portfolio</title>
+  <meta name="description" content="Auto Demarcation — E2E pipeline that identifies KPI alarm contributors for XLSMART's telecom network.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚒️</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+  <style>
+    :root {
+      --bg: #0a0a0f; --bg2: #111118; --bg3: #1a1a24;
+      --surface: #1e1e2a; --border: rgba(255,255,255,0.08);
+      --accent: #00e5ff; --text: #f0f0f8; --muted: #8888aa;
+      --tag-bg: rgba(0,229,255,0.08); --tag-color: #00e5ff;
+    }
+    .light {
+      --bg: #f4f4f8; --bg2: #ebebf2; --bg3: #e0e0ea;
+      --surface: #ffffff; --border: rgba(0,0,0,0.08);
+      --accent: #0070d4; --text: #0d0d1a; --muted: #5a5a7a;
+      --tag-bg: rgba(0,112,212,0.08); --tag-color: #0070d4;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); transition: background 0.3s, color 0.3s; }
+
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--bg); border-bottom: 1px solid var(--border);
+      padding: 0 2rem; display: flex; align-items: center;
+      justify-content: space-between; height: 56px;
+    }
+    .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 18px; color: var(--accent); text-decoration: none; letter-spacing: -0.5px; }
+    .nav-right { display: flex; align-items: center; gap: 1.5rem; }
+    .nav-back { font-size: 13px; color: var(--muted); text-decoration: none; display: flex; align-items: center; gap: 6px; transition: color 0.2s; }
+    .nav-back:hover { color: var(--accent); }
+    .theme-btn { width: 36px; height: 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; cursor: pointer; position: relative; transition: background 0.3s; }
+    .theme-btn::after { content: ''; width: 14px; height: 14px; border-radius: 50%; background: var(--accent); position: absolute; top: 2px; left: 2px; transition: transform 0.3s; }
+    .light .theme-btn::after { transform: translateX(16px); }
+
+    .container { max-width: 900px; margin: 0 auto; padding: 0 2rem; }
+
+    .project-hero { padding: 4rem 2rem 3rem; max-width: 900px; margin: 0 auto; }
+    .status-badge { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.08em; padding: 3px 12px; border-radius: 20px; display: inline-flex; align-items: center; gap: 5px; margin-bottom: 1.5rem; background: rgba(0,200,100,0.12); color: #00c864; border: 1px solid rgba(0,200,100,0.25); }
+    .status-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+    .project-hero h1 { font-family: 'Syne', sans-serif; font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1; margin-bottom: 1rem; }
+    .project-hero .subtitle { font-size: 16px; color: var(--muted); max-width: 620px; line-height: 1.7; margin-bottom: 2rem; }
+    .tech-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 2.5rem; }
+    .tag { font-family: 'DM Mono', monospace; font-size: 11px; padding: 5px 12px; border-radius: 4px; background: var(--tag-bg); color: var(--tag-color); border: 1px solid var(--tag-color); opacity: 0.8; }
+
+    .problem-banner { background: rgba(220,50,50,0.07); border: 1px solid rgba(220,50,50,0.2); border-left: 3px solid #e24b4a; border-radius: 8px; padding: 1.25rem 1.5rem; margin-bottom: 1rem; }
+    .problem-banner .label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #e24b4a; margin-bottom: 0.5rem; }
+    .problem-banner p { font-size: 14px; color: var(--muted); line-height: 1.65; }
+    .problem-banner p span { color: var(--text); }
+    .solution-banner { background: rgba(0,200,100,0.05); border: 1px solid rgba(0,200,100,0.2); border-left: 3px solid #00c864; border-radius: 8px; padding: 1.25rem 1.5rem; margin-bottom: 3rem; }
+    .solution-banner .label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #00c864; margin-bottom: 0.5rem; }
+    .solution-banner p { font-size: 14px; color: var(--muted); line-height: 1.65; }
+    .solution-banner p span { color: var(--text); }
+
+    .section { padding: 3rem 0; border-top: 1px solid var(--border); }
+    .section-label { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--accent); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 0.5rem; }
+    .section-title { font-family: 'Syne', sans-serif; font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 1.5rem; }
+
+    /* SCREENSHOTS */
+    .screenshot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1rem; }
+    .screenshot-item { border-radius: 8px; overflow: hidden; border: 1px solid var(--border); background: var(--surface); }
+    .screenshot-item img { width: 100%; display: block; transition: transform 0.3s; cursor: zoom-in; }
+    .screenshot-item:hover img { transform: scale(1.02); }
+    .screenshot-caption { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); padding: 8px 12px; border-top: 1px solid var(--border); }
+
+    /* LIGHTBOX */
+    .lightbox { display: none; position: fixed; inset: 0; z-index: 999; background: rgba(0,0,0,0.85); backdrop-filter: blur(6px); align-items: center; justify-content: center; padding: 1.5rem; }
+    .lightbox.active { display: flex; }
+    .lightbox img { max-width: 100%; max-height: 90vh; border-radius: 8px; border: 1px solid var(--border); object-fit: contain; cursor: zoom-in; transform-origin: center center; transition: transform 0.2s; user-select: none; }
+    .lightbox img.zoomed { cursor: zoom-out; }
+    .lightbox-close { position: fixed; top: 1rem; right: 1rem; background: var(--surface); border: 1px solid var(--border); color: var(--text); border-radius: 50%; width: 36px; height: 36px; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+
+    /* FLOW DIAGRAM */
+    .flow-diagram { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; margin-bottom: 1.5rem; overflow-x: auto; }
+    .flow-row { display: flex; align-items: center; justify-content: center; gap: 0; flex-wrap: nowrap; margin-bottom: 0; }
+    .flow-node {
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: 8px; padding: 0.75rem 1rem;
+      text-align: center; min-width: 110px; flex-shrink: 0;
+    }
+    .flow-node .node-icon { font-size: 18px; color: var(--accent); margin-bottom: 4px; }
+    .flow-node .node-label { font-size: 11px; font-weight: 500; line-height: 1.3; }
+    .flow-node .node-sub { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--muted); margin-top: 2px; }
+    .flow-node.highlight { border-color: var(--accent); background: var(--tag-bg); }
+    .flow-arrow { font-size: 18px; color: var(--muted); padding: 0 6px; flex-shrink: 0; }
+    .flow-down { display: flex; justify-content: center; padding: 8px 0; }
+    .flow-down-arrow { font-size: 18px; color: var(--muted); }
+
+    /* BRANCH */
+    .branch-container { display: flex; flex-direction: column; align-items: center; }
+    .branch-row { display: flex; gap: 10px; justify-content: center; margin-top: 8px; flex-wrap: wrap; }
+    .branch-node {
+      border-radius: 8px; padding: 0.65rem 0.85rem;
+      text-align: center; min-width: 100px; flex-shrink: 0;
+      font-size: 11px; font-weight: 500;
+      border: 1px solid;
+    }
+    .branch-site { background: rgba(0,200,100,0.1); border-color: rgba(0,200,100,0.4); color: #00c864; }
+    .branch-mme { background: rgba(0,229,255,0.1); border-color: rgba(0,229,255,0.4); color: var(--accent); }
+    .branch-pgw { background: rgba(124,58,237,0.1); border-color: rgba(124,58,237,0.4); color: #a78bfa; }
+    .branch-apps { background: rgba(255,180,0,0.1); border-color: rgba(255,180,0,0.4); color: #ffb400; }
+    .branch-node .branch-icon { font-size: 16px; margin-bottom: 4px; }
+    .branch-node .branch-sub { font-family: 'DM Mono', monospace; font-size: 9px; opacity: 0.7; margin-top: 2px; }
+
+    /* FEATURES */
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; }
+    .feature-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem; }
+    .feature-icon { font-size: 20px; color: var(--accent); margin-bottom: 0.75rem; }
+    .feature-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; margin-bottom: 0.4rem; }
+    .feature-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+    /* IMPACT */
+    .impact-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .impact-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem; text-align: center; }
+    .impact-num { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 2.2rem; color: var(--accent); line-height: 1; margin-bottom: 6px; }
+    .impact-label { font-size: 12px; color: var(--muted); line-height: 1.4; }
+
+    .back-section { padding: 3rem 0 4rem; border-top: 1px solid var(--border); }
+    .btn-ghost { padding: 12px 28px; background: transparent; color: var(--text); border: 1px solid var(--border); border-radius: 6px; font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 14px; cursor: pointer; text-decoration: none; transition: border-color 0.2s, transform 0.15s; display: inline-flex; align-items: center; gap: 8px; }
+    .btn-ghost:hover { border-color: var(--accent); transform: translateY(-1px); }
+
+    .animate-in { animation: fadeUp 0.5s ease forwards; opacity: 0; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+    @media (max-width: 600px) {
+      .screenshot-grid { grid-template-columns: 1fr; }
+      .impact-grid { grid-template-columns: 1fr; }
+      .flow-row { flex-wrap: wrap; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">S.Portfolio</a>
+  <div class="nav-right">
+    <a href="index.html" class="nav-back"><i class="ti ti-arrow-left"></i> Back to projects</a>
+    <button class="theme-btn" aria-label="Toggle theme"></button>
+  </div>
+</nav>
+
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()"><i class="ti ti-x"></i></button>
+  <img id="lightbox-img" src="" alt="">
+</div>
+
+<div class="project-hero animate-in">
+  <div class="status-badge"><span class="status-dot"></span>Live — Internal Tool</div>
+  <h1>Auto Demarcation</h1>
+  <p class="subtitle">An end-to-end data pipeline that ingests KPI drop alarms from Huawei SmartCare and automatically identifies the root cause contributor — whether it's a site, MME, PGW/GGSN, or a specific application — eliminating the need for manual network investigation.</p>
+  <div class="tech-tags">
+    <span class="tag">Python</span>
+    <span class="tag">SNMP</span>
+    <span class="tag">Data Pipeline</span>
+    <span class="tag">Huawei SmartCare</span>
+    <span class="tag">KPI Analysis</span>
+    <span class="tag">Bash / Shell Script</span>
+    <span class="tag">Linux</span>
+  </div>
+
+  <div class="problem-banner">
+    <div class="label">// The Problem</div>
+    <p>When a KPI drop alarm fires in XLSMART's network, engineers had to <span>manually investigate</span> the source — cross-checking data across sites, MME nodes, PGW/GGSN, and application layers. This process was <span>slow, inconsistent, and dependent on individual expertise</span>, often delaying response time for critical network issues.</p>
+  </div>
+  <div class="solution-banner">
+    <div class="label">// The Solution</div>
+    <p>Auto Demarcation takes a SmartCare alarm file as input and runs it through an <span>automated analysis pipeline</span> that cross-references KPI data across all network layers. Within seconds, it produces a structured output identifying the <span>exact contributor</span> — site, MME, PGW/GGSN, or app — so engineers can act immediately.</p>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="section animate-in" style="animation-delay:0.1s">
+    <div class="section-label">// screenshots</div>
+    <div class="section-title">App Overview</div>
+    <div class="screenshot-grid">
+      <div class="screenshot-item">
+        <img src="ss-autodem-1.jpeg" alt="Auto Demarcation — Alarm Events Dark Mode">
+        <div class="screenshot-caption">Alarm Events — dark mode, 17.314 events loaded</div>
+      </div>
+      <div class="screenshot-item">
+        <img src="ss-autodem-2.jpeg" alt="Auto Demarcation — Alarm Events Light Mode">
+        <div class="screenshot-caption">Alarm Events — light mode with MME contributor visible</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section animate-in" style="animation-delay:0.15s">
+    <div class="section-label">// how it works</div>
+    <div class="section-title">Pipeline Flow</div>
+
+    <div class="flow-diagram">
+  <div class="flow-row">
+    <div class="flow-node highlight">
+      <div class="node-icon"><i class="ti ti-radar"></i></div>
+      <div class="node-label">SmartCare Alarm</div>
+      <div class="node-sub">SNMP trap signal</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node">
+      <div class="node-icon"><i class="ti ti-brand-python"></i></div>
+      <div class="node-label">SNMP Receiver</div>
+      <div class="node-sub">Async Python script</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node">
+      <div class="node-icon"><i class="ti ti-code"></i></div>
+      <div class="node-label">Callback Function</div>
+      <div class="node-sub">Log + run process.sh</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node">
+      <div class="node-icon"><i class="ti ti-terminal"></i></div>
+      <div class="node-label">process.sh</div>
+      <div class="node-sub">Backend orchestrator</div>
+    </div>
+  </div>
+
+  <div class="flow-down"><div class="flow-down-arrow">↓</div></div>
+
+  <div class="flow-row">
+    <div class="flow-node highlight">
+      <div class="node-icon"><i class="ti ti-bolt"></i></div>
+      <div class="node-label">SparkSQL Script</div>
+      <div class="node-sub">KPI cross-layer analysis</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node">
+      <div class="node-icon"><i class="ti ti-folder-share"></i></div>
+      <div class="node-label">Result Folder</div>
+      <div class="node-sub">Output file written</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node">
+      <div class="node-icon"><i class="ti ti-world"></i></div>
+      <div class="node-label">HTML / JS Frontend</div>
+      <div class="node-sub">Reads & displays result</div>
+    </div>
+  </div>
+
+
+
+      <div class="flow-down"><div class="flow-down-arrow">↓</div></div>
+
+      <div class="branch-container">
+        <div class="flow-node" style="margin-bottom:0">
+          <div class="node-icon"><i class="ti ti-search"></i></div>
+          <div class="node-label">Contributor Identified</div>
+          <div class="node-sub">Root cause determined</div>
+        </div>
+        <div class="flow-down"><div class="flow-down-arrow">↓</div></div>
+        <div class="branch-row">
+          <div class="branch-node branch-site">
+            <div class="branch-icon"><i class="ti ti-tower"></i></div>
+            Site / BTS
+            <div class="branch-sub">Node B / eNB</div>
+          </div>
+          <div class="branch-node branch-mme">
+            <div class="branch-icon"><i class="ti ti-network"></i></div>
+            MME
+            <div class="branch-sub">Mobility Mgmt</div>
+          </div>
+          <div class="branch-node branch-pgw">
+            <div class="branch-icon"><i class="ti ti-router"></i></div>
+            PGW / GGSN
+            <div class="branch-sub">Gateway node</div>
+          </div>
+          <div class="branch-node branch-apps">
+            <div class="branch-icon"><i class="ti ti-device-mobile"></i></div>
+            Apps
+            <div class="branch-sub">e.g. MobileLegends</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section animate-in" style="animation-delay:0.2s">
+    <div class="section-label">// features</div>
+    <div class="section-title">Key Features</div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon"><i class="ti ti-bell-ringing"></i></div>
+        <div class="feature-title">Alarm Event Dashboard</div>
+        <div class="feature-desc">Displays all KPI drop alarms from SmartCare with trigger time, alarm type, GGSN/Province, and MME. Supports search, pagination, and filtering across thousands of events.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="ti ti-file-download"></i></div>
+        <div class="feature-title">One-Click Download</div>
+        <div class="feature-desc">Users simply click Download on any alarm row. The backend automatically processes the alarm data and returns a structured contributor report — no manual steps needed.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="ti ti-sitemap"></i></div>
+        <div class="feature-title">Multi-Layer Analysis</div>
+        <div class="feature-desc">The pipeline cross-checks KPI data across all network layers simultaneously — site, MME, PGW/GGSN, and application — to pinpoint exactly where the degradation originated.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="ti ti-sun-moon"></i></div>
+        <div class="feature-title">Dark / Light Mode</div>
+        <div class="feature-desc">Full theme toggle built into the app — engineers can switch between dark and light mode based on their working environment and preference.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="ti ti-filter"></i></div>
+        <div class="feature-title">Alarm Filtering</div>
+        <div class="feature-desc">Filter by alarm type across 20 unique categories. Search by alarm name, GGSN, or province to quickly surface the events that matter most.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="ti ti-clock"></i></div>
+        <div class="feature-title">Real-Time Data</div>
+        <div class="feature-desc">System Online indicator confirms live connectivity to SmartCare. The dashboard reflects current alarm data — 55 trigger events and 17,314 total records loaded in production.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section animate-in" style="animation-delay:0.25s">
+    <div class="section-label">// impact</div>
+    <div class="section-title">Results</div>
+    <div class="impact-grid">
+      <div class="impact-card">
+        <div class="impact-num">4</div>
+        <div class="impact-label">Contributor types identified automatically</div>
+      </div>
+      <div class="impact-card">
+        <div class="impact-num">17K+</div>
+        <div class="impact-label">Alarm events processed in production</div>
+      </div>
+      <div class="impact-card">
+        <div class="impact-num">0</div>
+        <div class="impact-label">Manual cross-checks needed per alarm</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="back-section">
+    <a href="index.html" class="btn-ghost"><i class="ti ti-arrow-left"></i> Back to all projects</a>
+  </div>
+</div>
+
+<script>
+  const saved = localStorage.getItem('theme');
+  if (saved === 'light') document.body.classList.add('light');
+  document.querySelector('.theme-btn').addEventListener('click', () => {
+    document.body.classList.toggle('light');
+    localStorage.setItem('theme', document.body.classList.contains('light') ? 'light' : 'dark');
+  });
+
+  let scale = 1, isDragging = false, startX, startY, translateX = 0, translateY = 0;
+
+  document.querySelectorAll('.screenshot-item img').forEach(img => {
+    img.addEventListener('click', () => {
+      const lb = document.getElementById('lightbox');
+      document.getElementById('lightbox-img').src = img.src;
+      lb.classList.add('active');
+      resetZoom();
+    });
+  });
+
+  function resetZoom() {
+    scale = 1; translateX = 0; translateY = 0;
+    const lbImg = document.getElementById('lightbox-img');
+    lbImg.classList.remove('zoomed');
+    applyTransform();
+  }
+  function applyTransform() {
+    document.getElementById('lightbox-img').style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+  }
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('active');
+    resetZoom();
+  }
+
+  document.getElementById('lightbox-img').addEventListener('click', (e) => {
+    e.stopPropagation();
+    const lbImg = document.getElementById('lightbox-img');
+    const rect = lbImg.getBoundingClientRect();
+    if (scale === 1) {
+      const offsetX = e.clientX - rect.left - rect.width / 2;
+      const offsetY = e.clientY - rect.top - rect.height / 2;
+      scale = 2.5;
+      translateX = -offsetX * (scale - 1);
+      translateY = -offsetY * (scale - 1);
+      lbImg.classList.add('zoomed');
+    } else {
+      scale = 1; translateX = 0; translateY = 0;
+      lbImg.classList.remove('zoomed');
+    }
+    applyTransform();
+  });
+
+  const lbImg = document.getElementById('lightbox-img');
+  lbImg.addEventListener('mousedown', (e) => {
+    if (scale === 1) return;
+    isDragging = true;
+    startX = e.clientX - translateX;
+    startY = e.clientY - translateY;
+    lbImg.style.transition = 'none';
+  });
+  document.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    translateX = e.clientX - startX;
+    translateY = e.clientY - startY;
+    applyTransform();
+  });
+  document.addEventListener('mouseup', () => {
+    isDragging = false;
+    lbImg.style.transition = 'transform 0.2s';
+  });
+
+  document.getElementById('lightbox').addEventListener('wheel', (e) => {
+    e.preventDefault();
+    const lbImg = document.getElementById('lightbox-img');
+    const rect = lbImg.getBoundingClientRect();
+    const offsetX = e.clientX - rect.left - rect.width / 2;
+    const offsetY = e.clientY - rect.top - rect.height / 2;
+    const prevScale = scale;
+    scale = Math.min(Math.max(1, scale - e.deltaY * 0.005), 4);
+    const delta = scale / prevScale;
+    translateX = translateX * delta - offsetX * (delta - 1);
+    translateY = translateY * delta - offsetY * (delta - 1);
+    if (scale === 1) { translateX = 0; translateY = 0; }
+    lbImg.classList.toggle('zoomed', scale > 1);
+    applyTransform();
+  }, { passive: false });
+
+  let lastDist = 0;
+  document.getElementById('lightbox').addEventListener('touchmove', (e) => {
+    if (e.touches.length === 2) {
+      e.preventDefault();
+      const dx = e.touches[0].clientX - e.touches[1].clientX;
+      const dy = e.touches[0].clientY - e.touches[1].clientY;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if (lastDist) scale = Math.min(Math.max(1, scale * (dist / lastDist)), 4);
+      lastDist = dist;
+      applyTransform();
+    }
+  }, { passive: false });
+  document.getElementById('lightbox').addEventListener('touchend', () => { lastDist = 0; });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+</script>
+</body>
+</html>
