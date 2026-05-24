@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Salman — Data Analyst Engineer</title>
+  <meta name="description" content="Salman's portfolio — Data Analyst Engineer at Huawei, building big data infrastructure for XLSMART's telecom network.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+  <style>
+    :root {
+      --bg: #0a0a0f; --bg2: #111118; --bg3: #1a1a24;
+      --surface: #1e1e2a; --border: rgba(255,255,255,0.08);
+      --accent: #00e5ff; --accent2: #7c3aed;
+      --text: #f0f0f8; --muted: #8888aa;
+      --tag-bg: rgba(0,229,255,0.08); --tag-color: #00e5ff;
+      --card-hover: rgba(0,229,255,0.04);
+    }
+    .light {
+      --bg: #f4f4f8; --bg2: #ebebf2; --bg3: #e0e0ea;
+      --surface: #ffffff; --border: rgba(0,0,0,0.08);
+      --accent: #0070d4; --accent2: #7c3aed;
+      --text: #0d0d1a; --muted: #5a5a7a;
+      --tag-bg: rgba(0,112,212,0.08); --tag-color: #0070d4;
+      --card-hover: rgba(0,112,212,0.03);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg); color: var(--text);
+      min-height: 100vh; transition: background 0.3s, color 0.3s;
+      overflow-x: hidden;
+    }
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--bg); border-bottom: 1px solid var(--border);
+      padding: 0 2rem; display: flex; align-items: center;
+      justify-content: space-between; height: 56px;
+      backdrop-filter: blur(12px); transition: background 0.3s;
+    }
+    .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 18px; color: var(--accent); letter-spacing: -0.5px; }
+    .nav-links { display: flex; gap: 2rem; align-items: center; }
+    .nav-links a { font-size: 13px; font-weight: 500; color: var(--muted); text-decoration: none; letter-spacing: 0.03em; text-transform: uppercase; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--accent); }
+    .theme-btn { width: 36px; height: 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; cursor: pointer; position: relative; transition: background 0.3s; flex-shrink: 0; }
+    .theme-btn::after { content: ''; width: 14px; height: 14px; border-radius: 50%; background: var(--accent); position: absolute; top: 2px; left: 2px; transition: transform 0.3s; }
+    .light .theme-btn::after { transform: translateX(16px); }
+    .hero { padding: 6rem 2rem 4rem; max-width: 900px; margin: 0 auto; }
+    .hero-eyebrow { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--accent); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px; }
+    .hero-eyebrow::before { content: ''; width: 32px; height: 1px; background: var(--accent); }
+    h1 { font-family: 'Syne', sans-serif; font-size: clamp(3rem, 7vw, 5.5rem); font-weight: 800; line-height: 0.95; letter-spacing: -0.03em; margin-bottom: 1.5rem; }
+    .highlight { color: var(--accent); }
+    .hero-sub { font-size: 16px; color: var(--muted); max-width: 520px; line-height: 1.7; margin-bottom: 2.5rem; }
+    .hero-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 3rem; }
+    .tag { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.05em; padding: 5px 12px; border-radius: 4px; background: var(--tag-bg); color: var(--tag-color); border: 1px solid var(--tag-color); opacity: 0.8; }
+    .hero-cta { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn-primary { padding: 12px 28px; background: var(--accent); color: #0a0a0f; border: none; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 14px; cursor: pointer; text-decoration: none; transition: opacity 0.2s, transform 0.15s; display: inline-flex; align-items: center; gap: 8px; }
+    .btn-primary:hover { opacity: 0.85; transform: translateY(-1px); }
+    .btn-ghost { padding: 12px 28px; background: transparent; color: var(--text); border: 1px solid var(--border); border-radius: 6px; font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 14px; cursor: pointer; text-decoration: none; transition: border-color 0.2s, transform 0.15s; display: inline-flex; align-items: center; gap: 8px; }
+    .btn-ghost:hover { border-color: var(--accent); transform: translateY(-1px); }
+    .divider { max-width: 900px; margin: 0 auto; border: none; border-top: 1px solid var(--border); }
+    section { max-width: 900px; margin: 0 auto; padding: 4rem 2rem; }
+    .section-label { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--accent); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 0.5rem; }
+    .section-title { font-family: 'Syne', sans-serif; font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 3rem; line-height: 1.1; }
+    .projects-grid { display: flex; flex-direction: column; gap: 1px; background: var(--border); border-radius: 12px; overflow: hidden; }
+    .project-card { background: var(--surface); padding: 2rem; display: grid; grid-template-columns: 1fr auto; gap: 1rem; transition: background 0.2s; position: relative; cursor: pointer; }
+    .project-card:hover { background: var(--card-hover); }
+    .project-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: transparent; transition: background 0.2s; }
+    .project-card:hover::before { background: var(--accent); }
+    .project-status { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.08em; padding: 3px 10px; border-radius: 20px; display: inline-flex; align-items: center; gap: 5px; margin-bottom: 0.75rem; width: fit-content; }
+    .status-live { background: rgba(0,200,100,0.12); color: #00c864; border: 1px solid rgba(0,200,100,0.25); }
+    .status-dev { background: rgba(255,180,0,0.12); color: #ffb400; border: 1px solid rgba(255,180,0,0.25); }
+    .status-planned { background: rgba(136,136,170,0.12); color: var(--muted); border: 1px solid var(--border); }
+    .status-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+    .project-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.3rem; margin-bottom: 0.5rem; letter-spacing: -0.01em; }
+    .project-desc { font-size: 14px; color: var(--muted); line-height: 1.65; max-width: 580px; margin-bottom: 1rem; }
+    .project-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .project-tag { font-family: 'DM Mono', monospace; font-size: 10px; padding: 3px 10px; border-radius: 4px; background: var(--bg3); color: var(--muted); border: 1px solid var(--border); }
+    .project-arrow { font-size: 20px; color: var(--muted); align-self: start; padding-top: 4px; transition: color 0.2s, transform 0.2s; }
+    .project-card:hover .project-arrow { color: var(--accent); transform: translate(2px, -2px); }
+    .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+    .skill-group { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem; }
+    .skill-group-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.75rem; }
+    .skill-list { display: flex; flex-wrap: wrap; gap: 6px; }
+    .skill-pill { font-size: 12px; padding: 4px 10px; border-radius: 4px; background: var(--bg3); color: var(--text); border: 1px solid var(--border); }
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
+    .about-text p { font-size: 15px; line-height: 1.8; color: var(--muted); margin-bottom: 1rem; }
+    .about-text p span { color: var(--text); }
+    .about-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem; }
+    .stat-num { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 2rem; color: var(--accent); line-height: 1; margin-bottom: 4px; }
+    .stat-label { font-size: 12px; color: var(--muted); }
+    .contact-box { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 3rem; text-align: center; }
+    .contact-box h3 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 2rem; margin-bottom: 0.75rem; letter-spacing: -0.02em; }
+    .contact-box p { color: var(--muted); font-size: 15px; margin-bottom: 2rem; line-height: 1.6; }
+    .contact-links { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    footer { max-width: 900px; margin: 0 auto; padding: 2rem; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); }
+    .animate-in { animation: fadeUp 0.6s ease forwards; opacity: 0; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 600px) {
+      .about-grid { grid-template-columns: 1fr; }
+      .project-card { grid-template-columns: 1fr; }
+      h1 { font-size: 2.8rem; }
+      .nav-links a { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo">S.Portfolio</span>
+  <div class="nav-links">
+    <a href="#projects">Projects</a>
+    <a href="#skills">Skills</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+    <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle theme"></button>
+  </div>
+</nav>
+
+<div class="hero animate-in" style="animation-delay:0.1s">
+  <div class="hero-eyebrow">Available for collaboration</div>
+  <h1>Salman<br><span class="highlight">Data Analyst</span><br>Engineer</h1>
+  <p class="hero-sub">Building data infrastructure that turns raw telecom signals into decisions. Currently at <strong>Huawei</strong>, powering <strong>XLSMART's</strong> network with SmartCare big data.</p>
+  <div class="hero-tags">
+    <span class="tag">Python</span><span class="tag">SQL</span><span class="tag">Apache Spark</span>
+    <span class="tag">Hadoop</span><span class="tag">Power BI</span><span class="tag">ETL</span><span class="tag">ML</span>
+  </div>
+  <div class="hero-cta">
+    <a href="#projects" class="btn-primary"><i class="ti ti-code"></i> View Projects</a>
+    <a href="#contact" class="btn-ghost"><i class="ti ti-mail"></i> Get In Touch</a>
+  </div>
+</div>
+
+<hr class="divider">
+
+<section id="projects" class="animate-in" style="animation-delay:0.2s">
+  <div class="section-label">// what i've built</div>
+  <div class="section-title">Projects</div>
+  <div class="projects-grid">
+
+    <div class="project-card">
+      <div>
+        <div class="project-status status-live"><span class="status-dot"></span>Live</div>
+        <div class="project-name">CSV Watcher</div>
+        <div class="project-desc">Internal web app automating SmartCare tool data loading directly into SQL Server — fully replacing the problematic SSIS pipeline. Eliminated data delays and duplicate records by monitoring network folders in real time, detecting CSV files by keyword, and appending data transactionally. Features a live log dashboard, import heatmap, job scheduler, and in-app table creator.</div>
+        <div class="project-tags">
+          <span class="project-tag">Python</span><span class="project-tag">Flask</span><span class="project-tag">SQL Server</span>
+          <span class="project-tag">Windows Service</span><span class="project-tag">ETL</span><span class="project-tag">SmartCare</span>
+        </div>
+      </div>
+      <div class="project-arrow">↗</div>
+    </div>
+
+    <div class="project-card">
+      <div>
+        <div class="project-status status-live"><span class="status-dot"></span>Live</div>
+        <div class="project-name">Auto Demarcation</div>
+        <div class="project-desc">End-to-end data pipeline that ingests KPI drop alarms from SmartCare and automatically identifies the root cause contributor — whether it's a site, MME, PGW, or application. Reduces manual investigation time by automating the full demarcation workflow from raw alarm input to structured root cause output.</div>
+        <div class="project-tags">
+          <span class="project-tag">Python</span><span class="project-tag">Data Pipeline</span><span class="project-tag">SmartCare</span>
+          <span class="project-tag">Telecom</span><span class="project-tag">KPI Analysis</span><span class="project-tag">Root Cause Analysis</span>
+        </div>
+      </div>
+      <div class="project-arrow">↗</div>
+    </div>
+
+    <div class="project-card">
+      <div>
+        <div class="project-status status-dev"><span class="status-dot"></span>In Development</div>
+        <div class="project-name">SmartCare Helper</div>
+        <div class="project-desc">An LLM-powered chatbot that helps users navigate and use Huawei SmartCare more effectively. Designed to lower the learning curve for new team members and speed up daily workflows by answering platform questions, guiding feature usage, and surfacing relevant insights through natural language.</div>
+        <div class="project-tags">
+          <span class="project-tag">LLM</span><span class="project-tag">Chatbot</span><span class="project-tag">SmartCare</span>
+          <span class="project-tag">NLP</span><span class="project-tag">RAG</span>
+        </div>
+      </div>
+      <div class="project-arrow">↗</div>
+    </div>
+
+    <div class="project-card">
+      <div>
+        <div class="project-status status-planned"><span class="status-dot"></span>Planned</div>
+        <div class="project-name">Traffic Forecasting Dashboard</div>
+        <div class="project-desc">Predictive traffic forecasting model for XLSMART's network, using historical SmartCare data to project future load trends. Results visualized in an interactive Power BI dashboard, enabling proactive capacity planning and early identification of congestion risks.</div>
+        <div class="project-tags">
+          <span class="project-tag">ML / Time Series</span><span class="project-tag">Power BI</span>
+          <span class="project-tag">Python</span><span class="project-tag">Forecasting</span><span class="project-tag">SmartCare</span>
+        </div>
+      </div>
+      <div class="project-arrow">↗</div>
+    </div>
+
+    <div class="project-card">
+      <div>
+        <div class="project-status status-planned"><span class="status-dot"></span>Planned</div>
+        <div class="project-name">Network Anomaly Detector</div>
+        <div class="project-desc">Unsupervised ML model to detect unusual patterns in XLSMART's KPI data before they escalate into alarms. Leverages clustering and anomaly detection techniques on SmartCare big data streams to give the team an early warning system for network health issues.</div>
+        <div class="project-tags">
+          <span class="project-tag">Anomaly Detection</span><span class="project-tag">Spark</span>
+          <span class="project-tag">ML</span><span class="project-tag">Telecom</span><span class="project-tag">SmartCare</span>
+        </div>
+      </div>
+      <div class="project-arrow">↗</div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="skills" class="animate-in" style="animation-delay:0.3s">
+  <div class="section-label">// tech stack</div>
+  <div class="section-title">Skills</div>
+  <div class="skills-grid">
+    <div class="skill-group"><div class="skill-group-label">Languages</div><div class="skill-list"><span class="skill-pill">Python</span><span class="skill-pill">SQL</span><span class="skill-pill">Bash</span></div></div>
+    <div class="skill-group"><div class="skill-group-label">Big Data</div><div class="skill-list"><span class="skill-pill">Apache Spark</span><span class="skill-pill">Hadoop</span><span class="skill-pill">ETL / Pipelines</span></div></div>
+    <div class="skill-group"><div class="skill-group-label">Visualization</div><div class="skill-list"><span class="skill-pill">Power BI</span><span class="skill-pill">Tableau</span><span class="skill-pill">Grafana</span></div></div>
+    <div class="skill-group"><div class="skill-group-label">Machine Learning</div><div class="skill-list"><span class="skill-pill">Scikit-learn</span><span class="skill-pill">Time Series</span><span class="skill-pill">NLP</span><span class="skill-pill">Computer Vision</span></div></div>
+    <div class="skill-group"><div class="skill-group-label">Databases</div><div class="skill-list"><span class="skill-pill">SQL Server</span><span class="skill-pill">ODBC</span><span class="skill-pill">Data Modeling</span></div></div>
+    <div class="skill-group"><div class="skill-group-label">Domain</div><div class="skill-list"><span class="skill-pill">Telecom</span><span class="skill-pill">Huawei SmartCare</span><span class="skill-pill">Managed Services</span></div></div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="about" class="animate-in" style="animation-delay:0.4s">
+  <div class="section-label">// who i am</div>
+  <div class="section-title">About</div>
+  <div class="about-grid">
+    <div class="about-text">
+      <p><span>I'm Salman</span>, a Data Analyst Engineer based in Jakarta, working at Huawei under a Managed Service engagement for XLSMART — one of Indonesia's major telecom operators.</p>
+      <p>My day-to-day revolves around <span>Huawei SmartCare big data</span>: building the pipelines that move it, the dashboards that surface it, and the tools that make it useful for the teams who depend on it.</p>
+      <p>I believe good data work isn't just technical — it's about making data <span>trustworthy, accessible, and actionable</span> for the people who rely on it to make real decisions.</p>
+    </div>
+    <div class="about-stats">
+      <div class="stat-card"><div class="stat-num">1+</div><div class="stat-label">Years at Huawei</div></div>
+      <div class="stat-card"><div class="stat-num">3</div><div class="stat-label">Tools built & deployed</div></div>
+      <div class="stat-card"><div class="stat-num">0</div><div class="stat-label">Data delays with CSV Watcher</div></div>
+      <div class="stat-card"><div class="stat-num">5+</div><div class="stat-label">Tech stack depth</div></div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="contact" class="animate-in" style="animation-delay:0.5s">
+  <div class="contact-box">
+    <div class="section-label" style="text-align:center;margin-bottom:1rem">// get in touch</div>
+    <h3>Let's build something.</h3>
+    <p>Open to collaborations, discussions about data engineering,<br>or just talking shop about telecom & big data.</p>
+    <div class="contact-links">
+      <a href="https://linkedin.com/in/YOUR_USERNAME" class="btn-primary"><i class="ti ti-brand-linkedin"></i> LinkedIn</a>
+      <a href="mailto:YOUR_EMAIL" class="btn-ghost"><i class="ti ti-mail"></i> Email</a>
+      <a href="https://github.com/YOUR_USERNAME" class="btn-ghost"><i class="ti ti-brand-github"></i> GitHub</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>Salman © 2026</span>
+  <span>Data Analyst Engineer · Huawei MS XLSMART</span>
+</footer>
+
+<script>
+  function toggleTheme() { document.body.classList.toggle('light'); }
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const t = document.querySelector(a.getAttribute('href'));
+      if (t) t.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+</script>
+</body>
+</html>
